@@ -1,0 +1,23 @@
+name: deploy-chabokan
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      
+      - name: Deploy to Chabokan
+        env:
+          CHABOKAN_TOKEN: ${{ secrets.CHABOKAN_TOKEN }}
+        run: |
+          npm install -g @chabokan.net/cli
+          chabok login -t $CHABOKAN_TOKEN
+          chabok deploy -s parvareshyar
