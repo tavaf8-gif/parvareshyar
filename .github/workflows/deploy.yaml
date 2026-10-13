@@ -8,16 +8,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
+      
+      - name: Install Chabokan CLI
+        run: npm install -g @chabokan.net/cli
       
       - name: Deploy to Chabokan
         env:
-          CHABOKAN_TOKEN: ${{sk-chbk-dv5JRyZD4FaO-CnT6YwUCUYMGfkFVN1H41GtXKTD5WBEc}}
+          CHABOKAN_USERNAME: ${{ secrets.CHABOKAN_USERNAME }}
+          CHABOKAN_PASSWORD: ${{ secrets.CHABOKAN_PASSWORD }}
         run: |
-          npm install -g @chabokan.net/cli
-          chabok login -t $CHABOKAN_TOKEN
-          chabok deploy -s parvareshyar
+          echo "Deploying to Chabokan..."
+          chabok deploy -s parvareshyar --username "$CHABOKAN_USERNAME" --password "$CHABOKAN_PASSWORD" || \
+          chabok deploy -s parvareshyar -u "$CHABOKAN_USERNAME" -p "$CHABOKAN_PASSWORD"
